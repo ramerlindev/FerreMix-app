@@ -58,6 +58,30 @@ CREATE TABLE IF NOT EXISTS orders (
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
 
+-- 6.1 Datos de envío por orden
+CREATE TABLE IF NOT EXISTS order_shipping (
+    id SERIAL PRIMARY KEY,
+    order_id INTEGER REFERENCES orders(id) ON DELETE CASCADE,
+    full_name VARCHAR(200) NOT NULL,
+    address TEXT NOT NULL,
+    city VARCHAR(120) NOT NULL,
+    phone VARCHAR(40) NOT NULL,
+    notes TEXT,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT unique_order_shipping UNIQUE (order_id)
+);
+
+-- 6.2 Pagos (simulados)
+CREATE TABLE IF NOT EXISTS payments (
+    id SERIAL PRIMARY KEY,
+    order_id INTEGER REFERENCES orders(id) ON DELETE CASCADE,
+    method VARCHAR(60) NOT NULL,
+    amount DECIMAL(10, 2) NOT NULL,
+    status VARCHAR(40) DEFAULT 'paid',
+    transaction_ref VARCHAR(120),
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
 -- 7. Items de la Orden (Detalle histórico)
 CREATE TABLE IF NOT EXISTS order_items (
     id SERIAL PRIMARY KEY,
@@ -85,4 +109,15 @@ INSERT INTO products (name, description, price, category_id, is_offer, stock, im
 ('Pintura Blanca 5 Galones', 'Pintura acrílica de alto rendimiento para interiores.', 2800.00, 3, TRUE, 30, 'https://placehold.co/400x300?text=Pintura'),
 ('Llave Inglesa 10"', 'Llave ajustable de acero cromado.', 600.00, 1, FALSE, 80, 'https://placehold.co/400x300?text=Llave+Inglesa'),
 ('Bombillo LED 9W', 'Pack de 4 bombillos luz blanca, ahorro de energía.', 350.00, 5, TRUE, 200, 'https://placehold.co/400x300?text=Bombillo+LED');
+
+-- Inserciones adicionales para robustecer el catálogo base
+INSERT INTO products (name, description, price, category_id, is_offer, stock, image_url) VALUES
+('Sierra Circular 7 1/4" 1800W', 'Corte preciso con guía láser integrada y disco premium.', 6850.00, 2, TRUE, 25, 'https://placehold.co/400x300?text=Sierra+Circular'),
+('Compresor de Aire 50L Silencioso', 'Motor de 2HP ideal para talleres urbanos y terminaciones finas.', 18900.00, 2, FALSE, 12, 'https://placehold.co/400x300?text=Compresor'),
+('Kit de Seguridad Industrial Pro', 'Casco ventilado, gafas antiempañantes y guantes anticorte nivel 5.', 2750.00, 1, TRUE, 60, 'https://placehold.co/400x300?text=Seguridad'),
+('Esmalte Marino Anticorrosivo', 'Acabado brillante con resistencia UV para exteriores costeros.', 2150.00, 3, FALSE, 40, 'https://placehold.co/400x300?text=Esmalte'),
+('Set Llaves Allen Millimétricas 17pzs', 'Fabricadas en acero S2 con punta esférica.', 980.00, 1, FALSE, 90, 'https://placehold.co/400x300?text=Llaves+Allen'),
+('Kit de Ducha Termostática Matt Black', 'Incluye regadera tipo lluvia y mono mando con cuerpo sólido.', 12500.00, 4, TRUE, 18, 'https://placehold.co/400x300?text=Ducha'),
+('Reflector LED 150W IP66', 'Flujo luminoso de 18 000 lm ideal para naves industriales.', 4200.00, 5, FALSE, 55, 'https://placehold.co/400x300?text=Reflector+LED'),
+('Microcemento Premium 20kg', 'Sistema decorativo listo para mezclar con alta adherencia.', 3450.00, 3, TRUE, 35, 'https://placehold.co/400x300?text=Microcemento');
 
