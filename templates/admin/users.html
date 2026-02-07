@@ -1,39 +1,42 @@
-{% extends "base.html" %}
-
-{% block content %}
-<div class="d-flex justify-between align-center mb-4">
-    <h2>Gestión de Usuarios</h2>
+{% extends "base.html" %} {% block content %}
+<section class="admin-page">
+  <div class="admin-header">
+    <div>
+      <h2>Gestión de usuarios</h2>
+      <p class="admin-subtitle">Revisa roles y accesos administradores.</p>
+    </div>
     <a href="{{ url_for('admin.create_user') }}" class="btn btn-success">
-        <i class="fas fa-plus"></i> Nuevo Usuario
+      <i class="fas fa-plus"></i> Nuevo usuario
     </a>
-</div>
+  </div>
 
-<div class="table-responsive">
+  <div class="admin-card admin-table">
     <table class="table">
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Email</th>
-                <th>Rol</th>
-                <th>Fecha Registro</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for user in users %}
-            <tr>
-                <td>{{ user.id }}</td>
-                <td>{{ user.email }}</td>
-                <td>
-                    {% if user.is_admin %}
-                    <span class="badge badge-primary">Admin</span>
-                    {% else %}
-                    <span class="badge badge-secondary">Cliente</span>
-                    {% endif %}
-                </td>
-                <td>{{ user.created_at.strftime('%Y-%m-%d') }}</td>
-            </tr>
-            {% endfor %}
-        </tbody>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Email</th>
+          <th>Rol</th>
+          <th>Fecha Registro</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for user in users %}
+        <tr>
+          <td>{{ user.id }}</td>
+          <td>{{ user.email }}</td>
+          <td>
+            {% if user.is_admin %}
+            <span class="badge badge-primary">Admin</span>
+            {% else %}
+            <span class="badge badge-secondary">Cliente</span>
+            {% endif %}
+          </td>
+          <td>{{ user.created_at[:10] if user.created_at else '' }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
     </table>
-</div>
+  </div>
+</section>
 {% endblock %}

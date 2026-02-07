@@ -1,29 +1,40 @@
-{% extends "base.html" %}
+{% extends "base.html" %} {% block content %}
+<section class="admin-page">
+  <div class="admin-header">
+    <div>
+      <h2>Crear usuario</h2>
+      <p class="admin-subtitle">
+        Agrega accesos con rol administrador si es necesario.
+      </p>
+    </div>
+  </div>
 
-{% block content %}
-<div class="form-container">
-    <h2>Crear Usuario</h2>
+  <div class="admin-card admin-form">
+    <form method="POST" class="admin-form-grid">
+      <div class="form-group">
+        <label class="form-label">Email</label>
+        <input type="email" name="email" class="form-control" required />
+      </div>
 
-    <form method="POST">
-        <div class="form-group">
-            <label class="form-label">Email</label>
-            <input type="email" name="email" class="form-control" required>
-        </div>
+      <div class="form-group">
+        <label class="form-label">Contraseña</label>
+        <input type="password" name="password" class="form-control" required />
+      </div>
 
-        <div class="form-group">
-            <label class="form-label">Contraseña</label>
-            <input type="password" name="password" class="form-control" required>
-        </div>
+      <div class="form-group">
+        <label class="form-label">
+          <input type="checkbox" name="is_admin" />
+          ¿Es Administrador?
+        </label>
+      </div>
 
-        <div class="form-group">
-            <label class="form-label">
-                <input type="checkbox" name="is_admin">
-                ¿Es Administrador?
-            </label>
-        </div>
-
+      <div class="admin-form-actions">
         <button type="submit" class="btn btn-primary">Crear</button>
-        <a href="{{ url_for('admin.users_list') }}" class="btn btn-secondary">Cancelar</a>
+        <a href="{{ url_for('admin.users_list') }}" class="btn btn-secondary"
+          >Cancelar</a
+        >
+      </div>
     </form>
-</div>
+  </div>
+</section>
 {% endblock %}
