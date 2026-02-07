@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="d-flex justify-between align-center mb-4">
+    <h2>Detalle de Orden #{{ order.id }}</h2>
+    <a href="{{ url_for('orders.my_orders') }}" class="btn btn-secondary">Volver</a>
+</div>
+
+<div class="card" style="background: white; padding: 2rem; border-radius: 8px;">
+    <div class="d-flex justify-between mb-4" style="border-bottom: 1px solid #eee; padding-bottom: 1rem;">
+        <div>
+            <strong>Fecha:</strong> {{ order.created_at.strftime('%Y-%m-%d %H:%M') }}
+        </div>
+        <div>
+            <strong>Estado:</strong> {{ order.status }}
+        </div>
+    </div>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Producto</th>
+                <th>Precio Compra</th>
+                <th>Cantidad</th>
+                <th>Subtotal</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in order.items %}
+            <tr>
+                <td>{{ item.product_name }}</td>
+                <td>${{ item.price_at_purchase }}</td>
+                <td>{{ item.quantity }}</td>
+                <td>${{ item.price_at_purchase * item.quantity }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+        <tfoot>
+            <tr>
+                <td colspan="3" class="text-right" style="font-weight: bold;">Total:</td>
+                <td style="font-weight: bold; color: var(--primary-color);">${{ order.total_amount }}</td>
+            </tr>
+        </tfoot>
+    </table>
+</div>
+{% endblock %}

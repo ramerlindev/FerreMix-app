@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Mis Pedidos</h2>
+
+{% if orders %}
+<div class="table-responsive">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>ID Orden</th>
+                <th>Fecha</th>
+                <th>Total</th>
+                <th>Estado</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for order in orders %}
+            <tr>
+                <td>#{{ order.id }}</td>
+                <td>{{ order.created_at.strftime('%Y-%m-%d %H:%M') }}</td>
+                <td>${{ order.total_amount }}</td>
+                <td>
+                    <span class="badge badge-{{ 'success' if order.status == 'completed' else 'warning' }}">
+                        {{ order.status }}
+                    </span>
+                </td>
+                <td>
+                    <a href="{{ url_for('orders.order_detail', order_id=order.id) }}" class="btn btn-primary btn-sm">Ver
+                        Detalle</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% else %}
+<div class="alert alert-info">Aún no has realizado ninguna compra.</div>
+<a href="{{ url_for('main.index') }}" class="btn btn-primary">Ir a comprar</a>
+{% endif %}
+{% endblock %}

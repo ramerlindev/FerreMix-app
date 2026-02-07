@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Todas las Órdenes</h2>
+
+<div class="table-responsive">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Usuario</th>
+                <th>Total</th>
+                <th>Estado</th>
+                <th>Fecha</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for order in orders %}
+            <tr>
+                <td>#{{ order.id }}</td>
+                <td>{{ order.user.email if order.user else 'Eliminado' }}</td>
+                <td>${{ order.total_amount }}</td>
+                <td>{{ order.status }}</td>
+                <td>{{ order.created_at.strftime('%Y-%m-%d %H:%M') }}</td>
+                <td>
+                    <a href="{{ url_for('admin.order_detail', order_id=order.id) }}"
+                        class="btn btn-primary btn-sm">Gestionar</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

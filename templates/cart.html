@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Tu Carrito de Compras</h2>
+
+{% if cart and cart.items %}
+<div class="table-responsive">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Producto</th>
+                <th>Precio Unitario</th>
+                <th>Cantidad</th>
+                <th>Total</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in cart.items %}
+            <tr>
+                <td>
+                    <div class="d-flex align-center gap-2">
+                        <img src="{{ item.product.image_url or 'https://placehold.co/50x50' }}" alt=""
+                            style="width: 50px; height: 50px; object-fit: cover;">
+                        <a href="{{ url_for('main.product_detail', id=item.product.id) }}"
+                            style="color: inherit; text-decoration: none; font-weight: 500;">
+                            {{ item.product.name }}
+                        </a>
+                    </div>
+                </td>
+                <td>${{ item.product.price }}</td>
+                <td>
+                    <form action="{{ url_for('cart.update_item', item_id=item.id) }}" method="POST"
+                        class="d-flex gap-2">
+                        <input type="number" name="quantity" value="{{ item.quantity }}" min="1" class="form-control"
+                            style="width: 70px;">
+                        <button type="submit" class="btn btn-secondary" title="Actualizar">
+                            <i class="fas fa-sync-alt"></i>
+                        </button>
+                    </form>
+                </td>
+                <td>${{ item.product.price * item.quantity }}</td>
+                <td>
+                    <form action="{{ url_for('cart.remove_item', item_id=item.id) }}" method="POST">
+                        <button type="submit" class="btn btn-danger" title="Eliminar">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+        <tfoot>
+            <tr>
+                <td colspan="3" style="text-align: right; font-weight: bold; font-size: 1.2rem;">Total a Pagar:</td>
+                <td colspan="2" style="font-weight: bold; font-size: 1.2rem; color: var(--primary-color);">${{ total }}
+                </td>
+            </tr>
+        </tfoot>
+    </table>
+</div>
+
+<div class="d-flex justify-between align-center mt-4">
+    <a href="{{ url_for('main.index') }}" class="btn btn-outline">Seguir Comprando</a>
+    <a href="{{ url_for('cart.checkout') }}" class="btn btn-success btn-lg">Proceder al Pago</a>
+</div>
+{% else %}
+<div class="alert alert-info text-center">
+    <p>Tu carrito está vacío.</p>
+    <a href="{{ url_for('main.index') }}" class="btn btn-primary mt-2">Ir a comprar</a>
+</div>
+{% endif %}
+{% endblock %}

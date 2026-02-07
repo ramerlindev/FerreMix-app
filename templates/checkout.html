@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="form-container" style="max-width: 800px;">
+    <h2 class="text-center">Finalizar Compra</h2>
+
+    <div class="alert alert-warning">
+        <i class="fas fa-info-circle"></i> Esta es una simulación. No se realizará ningún cobro real.
+    </div>
+
+    <div class="d-flex justify-between" style="gap: 2rem;">
+        <div style="flex: 1;">
+            <h3>Resumen del Pedido</h3>
+            <ul style="list-style: none; padding: 0;">
+                {% for item in cart.items %}
+                <li class="d-flex justify-between" style="border-bottom: 1px solid #eee; padding: 0.5rem 0;">
+                    <span>{{ item.quantity }}x {{ item.product.name }}</span>
+                    <span>${{ item.product.price * item.quantity }}</span>
+                </li>
+                {% endfor %}
+                <li class="d-flex justify-between" style="padding: 1rem 0; font-weight: bold; font-size: 1.2rem;">
+                    <span>Total</span>
+                    <span>${{ total }}</span>
+                </li>
+            </ul>
+        </div>
+
+        <div style="flex: 1; border-left: 1px solid #eee; padding-left: 2rem;">
+            <h3>Datos de Envío (Simulado)</h3>
+            <form action="{{ url_for('cart.checkout') }}" method="POST">
+                <div class="form-group">
+                    <label class="form-label">Dirección</label>
+                    <input type="text" class="form-control" placeholder="Calle Falsa 123" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Ciudad</label>
+                    <input type="text" class="form-control" placeholder="Santo Domingo" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Teléfono</label>
+                    <input type="tel" class="form-control" placeholder="809-555-5555" required>
+                </div>
+
+                <button type="submit" class="btn btn-success btn-lg" style="width: 100%;">Confirmar Pago</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

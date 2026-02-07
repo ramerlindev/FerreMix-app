@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}FerreMix - Tu Ferretería de Confianza{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <header>
+        <nav class="navbar">
+            <a href="{{ url_for('main.index') }}" class="brand">
+                <i class="fas fa-tools"></i> FerreMix
+            </a>
+            
+            <div class="nav-links">
+                <a href="{{ url_for('main.offers') }}">Ofertas</a>
+                
+                {% if current_user.is_authenticated %}
+                    {% if current_user.is_admin %}
+                        <a href="{{ url_for('admin.dashboard') }}" class="btn-outline" style="padding: 0.2rem 0.5rem; border-radius: 4px;">Admin</a>
+                    {% endif %}
+                    
+                    <a href="{{ url_for('orders.my_orders') }}">Mis Pedidos</a>
+                    <a href="{{ url_for('cart.view_cart') }}">
+                        <i class="fas fa-shopping-cart"></i> Carrito
+                    </a>
+                    <a href="{{ url_for('auth.logout') }}">Salir</a>
+                {% else %}
+                    <a href="{{ url_for('auth.login') }}">Ingresar</a>
+                    <a href="{{ url_for('auth.register') }}" class="btn btn-primary">Registrarse</a>
+                {% endif %}
+            </div>
+        </nav>
+    </header>
+
+    <div class="container">
+        <!-- Flash Messages -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <!-- Main Content -->
+        {% block content %}{% endblock %}
+    </div>
+
+    <footer>
+        <p>&copy; 2024 FerreMix. Todos los derechos reservados.</p>
+    </footer>
+
+    {% block scripts %}
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+    {% endblock %}
+</body>
+</html>
