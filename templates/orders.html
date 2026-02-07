@@ -1,42 +1,61 @@
-{% extends "base.html" %}
+{% extends "base.html" %} {% block content %}
+<section class="orders-page">
+  <div class="orders-header">
+    <div>
+      <h2>Mis Pedidos</h2>
+      <p class="orders-subtitle">
+        Consulta el estado y el historial de tus compras.
+      </p>
+    </div>
+    <a href="{{ url_for('main.index') }}" class="btn btn-outline"
+      >Seguir comprando</a
+    >
+  </div>
 
-{% block content %}
-<h2>Mis Pedidos</h2>
-
-{% if orders %}
-<div class="table-responsive">
-    <table class="table">
-        <thead>
-            <tr>
-                <th>ID Orden</th>
-                <th>Fecha</th>
-                <th>Total</th>
-                <th>Estado</th>
-                <th>Acciones</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for order in orders %}
-            <tr>
-                <td>#{{ order.id }}</td>
-                <td>{{ order.created_at.strftime('%Y-%m-%d %H:%M') }}</td>
-                <td>${{ order.total_amount }}</td>
-                <td>
-                    <span class="badge badge-{{ 'success' if order.status == 'completed' else 'warning' }}">
-                        {{ order.status }}
-                    </span>
-                </td>
-                <td>
-                    <a href="{{ url_for('orders.order_detail', order_id=order.id) }}" class="btn btn-primary btn-sm">Ver
-                        Detalle</a>
-                </td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-</div>
-{% else %}
-<div class="alert alert-info">Aún no has realizado ninguna compra.</div>
-<a href="{{ url_for('main.index') }}" class="btn btn-primary">Ir a comprar</a>
-{% endif %}
+  {% if orders %}
+  <div class="orders-grid">
+    {% for order in orders %}
+    <article class="order-card">
+      <div class="order-card-header">
+        <div>
+          <span class="order-label">Orden</span>
+          <h3>#{{ order.id }}</h3>
+        </div>
+        <span
+          class="order-status-badge {{ 'status-success' if order.status == 'completed' else 'status-warning' }}"
+        >
+          {{ order.status }}
+        </span>
+      </div>
+      <div class="order-meta">
+        <div>
+          <span>Fecha</span>
+          <strong
+            >{{ order.created_at[:16]|replace('T', ' ') if order.created_at else
+            '' }}</strong
+          >
+        </div>
+        <div>
+          <span>Total</span>
+          <strong>RD$ {{ order.total_amount }}</strong>
+        </div>
+      </div>
+      <a
+        href="{{ url_for('orders.order_detail', order_id=order.id) }}"
+        class="btn btn-primary btn-sm"
+        >Ver detalle</a
+      >
+    </article>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div class="orders-empty">
+    <i class="fas fa-receipt"></i>
+    <h3>Aún no has realizado ninguna compra.</h3>
+    <a href="{{ url_for('main.index') }}" class="btn btn-primary"
+      >Ir a comprar</a
+    >
+  </div>
+  {% endif %}
+</section>
 {% endblock %}

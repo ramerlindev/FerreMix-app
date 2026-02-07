@@ -1,46 +1,57 @@
-{% extends "base.html" %}
-
-{% block content %}
-<div class="d-flex justify-between align-center mb-4">
-    <h2>Detalle de Orden #{{ order.id }}</h2>
-    <a href="{{ url_for('orders.my_orders') }}" class="btn btn-secondary">Volver</a>
-</div>
-
-<div class="card" style="background: white; padding: 2rem; border-radius: 8px;">
-    <div class="d-flex justify-between mb-4" style="border-bottom: 1px solid #eee; padding-bottom: 1rem;">
-        <div>
-            <strong>Fecha:</strong> {{ order.created_at.strftime('%Y-%m-%d %H:%M') }}
-        </div>
-        <div>
-            <strong>Estado:</strong> {{ order.status }}
-        </div>
+{% extends "base.html" %} {% block content %}
+<section class="order-detail">
+  <div class="order-detail-header">
+    <div>
+      <h2>Detalle de Orden #{{ order.id }}</h2>
+      <p class="orders-subtitle">Revisa productos, cantidades y estado.</p>
     </div>
+    <a href="{{ url_for('orders.my_orders') }}" class="btn btn-secondary"
+      >Volver</a
+    >
+  </div>
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Producto</th>
-                <th>Precio Compra</th>
-                <th>Cantidad</th>
-                <th>Subtotal</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for item in order.items %}
-            <tr>
-                <td>{{ item.product_name }}</td>
-                <td>${{ item.price_at_purchase }}</td>
-                <td>{{ item.quantity }}</td>
-                <td>${{ item.price_at_purchase * item.quantity }}</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-        <tfoot>
-            <tr>
-                <td colspan="3" class="text-right" style="font-weight: bold;">Total:</td>
-                <td style="font-weight: bold; color: var(--primary-color);">${{ order.total_amount }}</td>
-            </tr>
-        </tfoot>
-    </table>
-</div>
+  <div class="order-summary-card">
+    <div>
+      <span>Fecha</span>
+      <strong
+        >{{ order.created_at[:16]|replace('T', ' ') if order.created_at else ''
+        }}</strong
+      >
+    </div>
+    <div>
+      <span>Estado</span>
+      <strong
+        class="order-status-pill {{ 'status-success' if order.status == 'completed' else 'status-warning' }}"
+      >
+        {{ order.status }}
+      </strong>
+    </div>
+    <div>
+      <span>Total</span>
+      <strong>RD$ {{ order.total_amount }}</strong>
+    </div>
+  </div>
+
+  <div class="order-items-card">
+    <div class="order-items-header">
+      <h3>Productos</h3>
+      <span>{{ order['items']|length }} artículos</span>
+    </div>
+    <div class="order-items-list">
+      {% for item in order['items'] %}
+      <article class="order-item">
+        <div>
+          <h4>{{ item.product_name }}</h4>
+          <p>RD$ {{ item.price_at_purchase }} × {{ item.quantity }}</p>
+        </div>
+        <strong>RD$ {{ item.price_at_purchase * item.quantity }}</strong>
+      </article>
+      {% endfor %}
+    </div>
+    <div class="order-items-total">
+      <span>Total</span>
+      <strong>RD$ {{ order.total_amount }}</strong>
+    </div>
+  </div>
+</section>
 {% endblock %}

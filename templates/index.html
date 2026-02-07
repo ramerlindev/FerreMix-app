@@ -4,29 +4,109 @@
 
 <!-- Show Hero only on Home (when not searching/filtering) -->
 {% if not show_filters %}
-<div class="hero-banner">
-    <div class="hero-content">
-        <h1 class="hero-title">Construye tus sueños <br>con los mejores.</h1>
-        <p class="hero-subtitle">Calidad garantizada en herramientas, materiales y acabados para tu hogar.</p>
-        <a href="{{ url_for('main.offers') }}" class="hero-btn">Ver Ofertas</a>
-    </div>
-    <!-- Decorative icon or image usually goes here -->
-    <div style="font-size: 10rem; opacity: 0.2;">
-        <i class="fas fa-paint-roller"></i>
-    </div>
-</div>
+<section class="hero-banner has-image simple-hero" data-hero-images="https://innovacentro.com.do/content/files/images/recursos%20landing%20pages/0-home/enero-organiza/banner/banner-landing-organiza-saludv2.png|https://innovacentro.com.do/content/files/images/recursos%20landing%20pages/0-home/enero-organiza/banner/innova%20pintura.jpg">
+    <div class="hero-bg" aria-hidden="true"></div>
+</section>
 
-<div class="categories-section">
-    <h2 class="section-title"><i class="fas fa-th-large"></i> Compra por categoría</h2>
-    <div class="categories-grid">
-        {% for cat in categories %}
-        <a href="{{ url_for('main.offers', category=cat.id) }}" class="category-card">
-            <i class="fas fa-tools category-icon"></i> <!-- Generic icon, ideal would be cat.icon -->
-            <div>{{ cat.name }}</div>
+<section class="value-grid">
+    <article class="value-card">
+        <div class="value-icon" style="background: rgba(255, 255, 255, 0.2); color: var(--accent-strong);">
+            <i class="fas fa-award"></i>
+        </div>
+        <div>
+            <h3>Marcas icónicas</h3>
+            <p>Curamos líneas con garantía internacional y soporte técnico directo.</p>
+        </div>
+    </article>
+    <article class="value-card accent">
+        <div class="value-icon" style="background: rgba(255, 123, 25, 0.15); color: var(--primary-dark);">
+            <i class="fas fa-drafting-compass"></i>
+        </div>
+        <div>
+            <h3>Diseño + ingeniería</h3>
+            <p>Integramos acabados, iluminación y ferretería con asesoría especializada.</p>
+        </div>
+    </article>
+    <article class="value-card">
+        <div class="value-icon" style="background: rgba(18, 53, 102, 0.1); color: var(--primary-color);">
+            <i class="fas fa-truck-moving"></i>
+        </div>
+        <div>
+            <h3>Logística precisa</h3>
+            <p>Rutas programadas y seguimiento en tiempo real para tus proyectos.</p>
+        </div>
+    </article>
+</section>
+
+<section class="categories-section featured-categories">
+    <div class="section-header" style="margin-bottom: 1.5rem;">
+        <div>
+            <h2 class="section-title"><i class="fas fa-th-large"></i> Compra por categoría</h2>
+            <p style="color: var(--light-text);">Selecciona el universo ideal para tu próximo proyecto.</p>
+        </div>
+        <a href="{{ url_for('main.offers') }}" class="view-all-link">
+            Ver más <i class="fas fa-arrow-right"></i>
+        </a>
+    </div>
+    {% set featured_banners = [
+        {'title': 'Electrodomésticos', 'image': 'https://innovacentro.com.do/content/files/images/recursos%20landing%20pages/0-home/black%20friday/carrusel%20top/imagenes%20comprimidas/estufa%20y%20extractor%20c.png'},
+        {'title': 'Limpieza', 'image': 'https://innovacentro.com.do/content/files/images/recursos%20landing%20pages/0-home/navidad%20web/fotos/limpieza.jpg'},
+        {'title': 'Pintura', 'image': 'https://innovacentro.com.do/content/files/images/recursos%20landing%20pages/0-home/navidad%20web/fotos/pintura.jpg'},
+        {'title': 'Almacenaje & Organización', 'image': 'https://innovacentro.com.do/content/files/images/recursos%20landing%20pages/0-home/reinnova%202025/alor/057575_1%20(1).jpg'},
+        {'title': 'Cocina & Mesa', 'image': 'https://innovacentro.com.do/content/files/images/recursos%20landing%20pages/0-home/navidad%20web/fotos/coyme.png'},
+        {'title': 'Organización de cocina', 'image': 'https://innovacentro.com.do/content/files/images/recursos%20landing%20pages/0-home/enero-organiza/banner/organizacioncocina.jpg'}
+    ] %}
+    <div class="category-strip">
+        {% for item in featured_banners %}
+        <a href="{{ url_for('main.offers') }}" class="category-tile">
+            <img src="{{ item.image }}" alt="{{ item.title }}" class="category-tile-image">
+            <span class="category-chip">{{ item.title }}</span>
         </a>
         {% endfor %}
     </div>
-</div>
+</section>
+
+<section class="collection-panels">
+    <article class="collection-card primary">
+        <span class="card-eyebrow">Colección profesional</span>
+        <h3>Herramientas calibradas para obras de alto desempeño.</h3>
+        <p style="margin-bottom: 1.5rem;">Capacitamos a tu cuadrilla y configuramos kits a medida.</p>
+        <a href="{{ url_for('main.offers', category=2) }}">Ver sets eléctricos <i class="fas fa-arrow-right"></i></a>
+    </article>
+    <article class="collection-card outline">
+        <span class="card-eyebrow">Outlet inteligente</span>
+        <h3>Rotación de inventario con descuentos temporales.</h3>
+        <p style="margin-bottom: 1.5rem;">Pinturas, luminarias y accesorios con disponibilidad inmediata.</p>
+        <a href="{{ url_for('main.offers', category=3) }}">Descubrir ofertas <i class="fas fa-arrow-right"></i></a>
+    </article>
+</section>
+
+<section class="project-lab">
+    <div class="lab-copy">
+        <p class="hero-eyebrow" style="color: var(--accent-strong);">Proyecto</p>
+        <h3>Diseñamos la experiencia completa de compra para constructoras boutique.</h3>
+        <p style="color: var(--light-text); margin-bottom: 1.2rem;">Agenda una ruta privada para validar muestras,
+            terminaciones y logística en un solo flujo.</p>
+        <ul class="lab-checklist">
+            <li><i class="fas fa-check-circle" style="color: var(--success-color);"></i>Tableros comparativos y fichas
+                técnicas.
+            </li>
+            <li><i class="fas fa-check-circle" style="color: var(--success-color);"></i>Coordinación de entregas por
+                etapa constructiva.</li>
+            <li><i class="fas fa-check-circle" style="color: var(--success-color);"></i>Integración con tu equipo de
+                compras.</li>
+        </ul>
+    </div>
+    <div class="lab-panel">
+        <h4 style="font-size: 1.2rem;">Agenda express</h4>
+        <div class="lab-badges">
+            <span><i class="fas fa-clock"></i> Slots 48h</span>
+            <span><i class="fas fa-route"></i> Ruta urbana</span>
+            <span><i class="fas fa-warehouse"></i> Stock garantizado</span>
+        </div>
+        <a href="{{ url_for('auth.register') }}" class="btn lab-btn">Reservar visita privada</a>
+    </div>
+</section>
 {% endif %}
 
 <div class="d-flex" style="gap: 2rem; margin-top: 2rem;">
@@ -35,7 +115,7 @@
     <aside
         style="width: 260px; flex-shrink: 0; background: #fff; padding: 1.5rem; border-radius: 8px; border: 1px solid var(--border-color); height: fit-content;">
         <h3 style="margin-bottom: 1.5rem;">Filtros</h3>
-        <form action="{{ url_for('main.offers') }}" method="GET">
+        <form action="{{ url_for('main.offers') }}" method="GET" data-auto-submit="true">
             <!-- Search params hidden to keep them -->
             {% if request.args.get('search') %}
             <input type="hidden" name="search" value="{{ request.args.get('search') }}">
@@ -69,7 +149,6 @@
                 </div>
             </div>
 
-            <button type="submit" class="btn btn-primary btn-block">Aplicar Filtros</button>
             <a href="{{ url_for('main.offers') }}" class="btn btn-secondary btn-block mt-2"
                 style="background: transparent; color: #666; border: 1px solid #ccc;">Limpiar</a>
         </form>
@@ -92,7 +171,7 @@
                     {% endif %}
                 </div>
                 <a href="{{ section.link }}" class="view-all-link">
-                    Ver todo <i class="fas fa-arrow-right"></i>
+                    Ver más <i class="fas fa-arrow-right"></i>
                 </a>
             </div>
 
@@ -118,7 +197,7 @@
 
                         <div class="product-price">RD$ {{ "{:,.2f}".format(product.price) }}</div>
 
-                        <form action="{{ url_for('cart.add_to_cart', product_id=product.id) }}" method="POST">
+                        <form action="{{ url_for('cart.add_to_cart', product_id=product.id) }}" method="POST" data-ajax-add>
                             <button type="submit" class="add-btn">
                                 <i class="fas fa-cart-plus"></i> Agregar
                             </button>
@@ -136,7 +215,7 @@
             <h2 class="section-title" style="margin-bottom: 0;">{{ title }}</h2>
             {% if not show_filters %}
             <a href="{{ url_for('main.offers') }}" class="view-all-link">
-                Ver todo <i class="fas fa-arrow-right"></i>
+                Ver más <i class="fas fa-arrow-right"></i>
             </a>
             {% endif %}
         </div>
@@ -164,7 +243,7 @@
 
                     <div class="product-price">RD$ {{ "{:,.2f}".format(product.price) }}</div>
 
-                    <form action="{{ url_for('cart.add_to_cart', product_id=product.id) }}" method="POST">
+                    <form action="{{ url_for('cart.add_to_cart', product_id=product.id) }}" method="POST" data-ajax-add>
                         <button type="submit" class="add-btn">
                             <i class="fas fa-cart-plus"></i> Agregar
                         </button>
