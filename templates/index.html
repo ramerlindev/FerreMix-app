@@ -1,82 +1,185 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="d-flex" style="gap: 2rem;">
-    <!-- Filters Sidebar -->
-    <aside class="filters" style="width: 250px; flex-shrink: 0;">
-        <h3>Filtros</h3>
-        <form action="{{ url_for('main.offers') if 'offers' in request.path else url_for('main.index') }}" method="GET">
-            <div class="filter-group">
-                <label class="form-label">Buscar</label>
-                <input type="text" name="search" class="form-control" placeholder="Nombre..."
-                    value="{{ request.args.get('search', '') }}">
-            </div>
 
-            <div class="filter-group">
+<!-- Show Hero only on Home (when not searching/filtering) -->
+{% if not show_filters %}
+<div class="hero-banner">
+    <div class="hero-content">
+        <h1 class="hero-title">Construye tus sueños <br>con los mejores.</h1>
+        <p class="hero-subtitle">Calidad garantizada en herramientas, materiales y acabados para tu hogar.</p>
+        <a href="{{ url_for('main.offers') }}" class="hero-btn">Ver Ofertas</a>
+    </div>
+    <!-- Decorative icon or image usually goes here -->
+    <div style="font-size: 10rem; opacity: 0.2;">
+        <i class="fas fa-paint-roller"></i>
+    </div>
+</div>
+
+<div class="categories-section">
+    <h2 class="section-title"><i class="fas fa-th-large"></i> Compra por categoría</h2>
+    <div class="categories-grid">
+        {% for cat in categories %}
+        <a href="{{ url_for('main.offers', category=cat.id) }}" class="category-card">
+            <i class="fas fa-tools category-icon"></i> <!-- Generic icon, ideal would be cat.icon -->
+            <div>{{ cat.name }}</div>
+        </a>
+        {% endfor %}
+    </div>
+</div>
+{% endif %}
+
+<div class="d-flex" style="gap: 2rem; margin-top: 2rem;">
+    <!-- Sidebar Filters (Only visible on /offers or if explicitly requested) -->
+    {% if show_filters %}
+    <aside
+        style="width: 260px; flex-shrink: 0; background: #fff; padding: 1.5rem; border-radius: 8px; border: 1px solid var(--border-color); height: fit-content;">
+        <h3 style="margin-bottom: 1.5rem;">Filtros</h3>
+        <form action="{{ url_for('main.offers') }}" method="GET">
+            <!-- Search params hidden to keep them -->
+            {% if request.args.get('search') %}
+            <input type="hidden" name="search" value="{{ request.args.get('search') }}">
+            {% endif %}
+
+            <div style="margin-bottom: 1.5rem;">
                 <label class="form-label">Categoría</label>
-                <select name="category" class="form-control">
-                    <option value="">Todas</option>
-                    {% for category in categories %}
-                    <option value="{{ category.id }}" {% if request.args.get('category')|int==category.id %}selected{%
-                        endif %}>
-                        {{ category.name }}
-                    </option>
+                <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+                    <label style="cursor: pointer;">
+                        <input type="radio" name="category" value="" {% if not request.args.get('category') %}checked{%
+                            endif %}>
+                        Todas
+                    </label>
+                    {% for cat in categories %}
+                    <label style="cursor: pointer;">
+                        <input type="radio" name="category" value="{{ cat.id }}" {% if
+                            request.args.get('category')|int==cat.id %}checked{% endif %}>
+                        {{ cat.name }}
+                    </label>
                     {% endfor %}
-                </select>
+                </div>
             </div>
 
-            <div class="filter-group">
-                <label class="form-label">Precio Mínimo</label>
-                <input type="number" name="min_price" class="form-control"
-                    value="{{ request.args.get('min_price', '') }}">
+            <div style="margin-bottom: 1rem;">
+                <label class="form-label">Precio</label>
+                <div class="d-flex gap-1">
+                    <input type="number" name="min_price" class="form-control" placeholder="Min"
+                        value="{{ request.args.get('min_price', '') }}">
+                    <input type="number" name="max_price" class="form-control" placeholder="Max"
+                        value="{{ request.args.get('max_price', '') }}">
+                </div>
             </div>
 
-            <div class="filter-group">
-                <label class="form-label">Precio Máximo</label>
-                <input type="number" name="max_price" class="form-control"
-                    value="{{ request.args.get('max_price', '') }}">
-            </div>
-
-            <button type="submit" class="btn btn-primary" style="width: 100%;">Filtrar</button>
-            <a href="{{ url_for('main.index') }}" class="btn btn-secondary mt-2"
-                style="width: 100%; text-align: center;">Limpiar</a>
+            <button type="submit" class="btn btn-primary btn-block">Aplicar Filtros</button>
+            <a href="{{ url_for('main.offers') }}" class="btn btn-secondary btn-block mt-2"
+                style="background: transparent; color: #666; border: 1px solid #ccc;">Limpiar</a>
         </form>
     </aside>
+    {% endif %}
 
     <!-- Product Grid -->
-    <main style="flex-grow: 1;">
-        <h2>{{ title or 'Nuestros Productos' }}</h2>
+    <main style="flex: 1;">
+
+        {% if category_sections and not show_filters %}
+        <!-- HOME VIEW: Sections per Category -->
+        {% for section in category_sections %}
+        <div class="category-section-block">
+            <div class="section-header">
+                <div>
+                    <h2 class="section-title">{{ section.title }}</h2>
+                    {% if section.description %}
+                    <p style="color: var(--light-text); font-size: 0.95rem; margin-top: 0.2rem;">{{ section.description
+                        }}</p>
+                    {% endif %}
+                </div>
+                <a href="{{ section.link }}" class="view-all-link">
+                    Ver todo <i class="fas fa-arrow-right"></i>
+                </a>
+            </div>
+
+            <div class="product-grid">
+                {% for product in section.products %}
+                <div class="product-card">
+                    {% if product.is_offer %}
+                    <span class="badge-offer">OFERTA</span>
+                    {% endif %}
+
+                    <div class="product-image-container">
+                        <img src="{{ product.image_url or 'https://placehold.co/300x300/f5f5f5/png?text=Producto' }}"
+                            alt="{{ product.name }}" class="product-image">
+                    </div>
+
+                    <div class="product-info">
+                        <div class="product-category-label">{{ product.category.name if product.category else 'General'
+                            }}</div>
+                        <a href="{{ url_for('main.product_detail', id=product.id) }}"
+                            style="text-decoration: none; color: inherit;">
+                            <h3 class="product-name">{{ product.name }}</h3>
+                        </a>
+
+                        <div class="product-price">RD$ {{ "{:,.2f}".format(product.price) }}</div>
+
+                        <form action="{{ url_for('cart.add_to_cart', product_id=product.id) }}" method="POST">
+                            <button type="submit" class="add-btn">
+                                <i class="fas fa-cart-plus"></i> Agregar
+                            </button>
+                        </form>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endfor %}
+
+        {% else %}
+        <!-- FILTER/SEARCH VIEW or Fallback -->
+        <div class="d-flex justify-between align-center" style="margin-bottom: 2rem;">
+            <h2 class="section-title" style="margin-bottom: 0;">{{ title }}</h2>
+            {% if not show_filters %}
+            <a href="{{ url_for('main.offers') }}" class="view-all-link">
+                Ver todo <i class="fas fa-arrow-right"></i>
+            </a>
+            {% endif %}
+        </div>
 
         {% if products %}
         <div class="product-grid">
             {% for product in products %}
             <div class="product-card">
-                <img src="{{ product.image_url or 'https://placehold.co/300x200' }}" alt="{{ product.name }}"
-                    class="product-image">
-                <div class="product-details">
-                    {% if product.is_offer %}
-                    <span class="badge-offer">OFERTA</span>
-                    {% endif %}
-                    <div class="product-category">{{ product.category.name if product.category else 'General' }}</div>
-                    <h3 class="product-title">{{ product.name }}</h3>
-                    <div class="product-price">${{ product.price }}</div>
+                {% if product.is_offer %}
+                <span class="badge-offer">OFERTA</span>
+                {% endif %}
 
-                    <div class="d-flex gap-2 mt-auto">
-                        <a href="{{ url_for('main.product_detail', id=product.id) }}" class="btn btn-outline"
-                            style="flex: 1; text-align: center;">Ver</a>
-                        <form action="{{ url_for('cart.add_to_cart', product_id=product.id) }}" method="POST"
-                            style="flex: 1;">
-                            <button type="submit" class="btn btn-primary" style="width: 100%;">
-                                <i class="fas fa-cart-plus"></i>
-                            </button>
-                        </form>
+                <div class="product-image-container">
+                    <img src="{{ product.image_url or 'https://placehold.co/300x300/f5f5f5/png?text=Producto' }}"
+                        alt="{{ product.name }}" class="product-image">
+                </div>
+
+                <div class="product-info">
+                    <div class="product-category-label">{{ product.category.name if product.category else 'General' }}
                     </div>
+                    <a href="{{ url_for('main.product_detail', id=product.id) }}"
+                        style="text-decoration: none; color: inherit;">
+                        <h3 class="product-name">{{ product.name }}</h3>
+                    </a>
+
+                    <div class="product-price">RD$ {{ "{:,.2f}".format(product.price) }}</div>
+
+                    <form action="{{ url_for('cart.add_to_cart', product_id=product.id) }}" method="POST">
+                        <button type="submit" class="add-btn">
+                            <i class="fas fa-cart-plus"></i> Agregar
+                        </button>
+                    </form>
                 </div>
             </div>
             {% endfor %}
         </div>
         {% else %}
-        <div class="alert alert-info">No se encontraron productos con los filtros seleccionados.</div>
+        <div style="text-align: center; padding: 4rem; background: white; border-radius: 8px;">
+            <i class="fas fa-search" style="font-size: 3rem; color: #ccc; margin-bottom: 1rem;"></i>
+            <h3>No encontramos productos.</h3>
+            <p style="color: grey;">Intenta ajustar tus filtros de búsqueda.</p>
+        </div>
+        {% endif %}
         {% endif %}
     </main>
 </div>

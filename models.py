@@ -131,7 +131,7 @@ class Product:
         supabase.table('products').delete().eq('id', id).execute()
     
     @staticmethod
-    def filter(filters):
+    def filter(filters, limit=None):
         query = supabase.table('products').select("*, categories(name)")
         
         if 'is_offer' in filters:
@@ -144,6 +144,9 @@ class Product:
             query = query.lte('price', filters['max_price'])
         if 'search' in filters and filters['search']:
             query = query.ilike('name', f"%{filters['search']}%")
+            
+        if limit:
+            query = query.limit(limit)
             
         response = query.execute()
         products = []

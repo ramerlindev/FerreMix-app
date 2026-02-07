@@ -1,62 +1,109 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}FerreMix - Tu Ferretería de Confianza{% endblock %}</title>
+    <title>{% block title %}FerreMix - Todo en Ferretería{% endblock %}</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
+
 <body>
+
+    <!-- Header / Nav -->
     <header>
-        <nav class="navbar">
+        <!-- Top Bar: Logo, Search, Actions -->
+        <div class="top-bar">
             <a href="{{ url_for('main.index') }}" class="brand">
-                <i class="fas fa-tools"></i> FerreMix
+                <i class="fas fa-hammer"></i> FerreMix
             </a>
-            
-            <div class="nav-links">
-                <a href="{{ url_for('main.offers') }}">Ofertas</a>
-                
+
+            <div class="search-container">
+                <form action="{{ url_for('main.offers') }}" method="GET" class="search-form">
+                    <input type="text" name="search" class="search-input" placeholder="¿Qué estás buscando hoy?"
+                        value="{{ request.args.get('search', '') }}">
+                    <button type="submit" class="search-btn">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </form>
+            </div>
+
+            <div class="user-actions">
                 {% if current_user.is_authenticated %}
-                    {% if current_user.is_admin %}
-                        <a href="{{ url_for('admin.dashboard') }}" class="btn-outline" style="padding: 0.2rem 0.5rem; border-radius: 4px;">Admin</a>
-                    {% endif %}
-                    
-                    <a href="{{ url_for('orders.my_orders') }}">Mis Pedidos</a>
-                    <a href="{{ url_for('cart.view_cart') }}">
-                        <i class="fas fa-shopping-cart"></i> Carrito
-                    </a>
-                    <a href="{{ url_for('auth.logout') }}">Salir</a>
+                <a href="{{ url_for('orders.my_orders') }}" class="action-item">
+                    <i class="far fa-user-circle"></i>
+                    <span>Mi Cuenta</span>
+                </a>
+                {% if current_user.is_admin %}
+                <a href="{{ url_for('admin.dashboard') }}" class="action-item">
+                    <i class="fas fa-cog"></i>
+                    <span>Admin</span>
+                </a>
+                {% endif %}
+                <a href="{{ url_for('cart.view_cart') }}" class="action-item">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span>Carrito</span>
+                </a>
+                <a href="{{ url_for('auth.logout') }}" class="action-item">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>Salir</span>
+                </a>
                 {% else %}
-                    <a href="{{ url_for('auth.login') }}">Ingresar</a>
-                    <a href="{{ url_for('auth.register') }}" class="btn btn-primary">Registrarse</a>
+                <a href="{{ url_for('auth.login') }}" class="action-item">
+                    <i class="far fa-user"></i>
+                    <span>Ingresar</span>
+                </a>
+                <a href="{{ url_for('cart.view_cart') }}" class="action-item">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span>Carrito</span>
+                </a>
                 {% endif %}
             </div>
-        </nav>
+        </div>
+
+        <!-- Main Nav: Categories/Links -->
+        <div class="main-nav">
+            <nav class="nav-container">
+                <a href="{{ url_for('main.index') }}" class="nav-link">Inicio</a>
+                <a href="{{ url_for('main.offers') }}" class="nav-link">Ofertas</a>
+                <!-- We could list main categories here dynamically in a real app -->
+                <a href="{{ url_for('main.offers', category=1) }}" class="nav-link">Herramientas</a>
+                <!-- Dummy ID links for demo -->
+                <a href="{{ url_for('main.offers', category=2) }}" class="nav-link">Pinturas</a>
+                <a href="{{ url_for('main.offers', category=3) }}" class="nav-link">Hogar</a>
+            </nav>
+        </div>
     </header>
 
+    <!-- Main Content -->
     <div class="container">
         <!-- Flash Messages -->
         {% with messages = get_flashed_messages(with_categories=true) %}
-            {% if messages %}
-                {% for category, message in messages %}
-                    <div class="alert alert-{{ category }}">
-                        {{ message }}
-                    </div>
-                {% endfor %}
-            {% endif %}
+        {% if messages %}
+        {% for category, message in messages %}
+        <div class="alert alert-{{ category }}">
+            <i class="fas fa-info-circle"></i> {{ message }}
+        </div>
+        {% endfor %}
+        {% endif %}
         {% endwith %}
 
-        <!-- Main Content -->
         {% block content %}{% endblock %}
     </div>
 
+    <!-- Footer -->
     <footer>
-        <p>&copy; 2024 FerreMix. Todos los derechos reservados.</p>
+        <div class="container text-center">
+            <h3>FerreMix</h3>
+            <p>Tu aliado en construcción y hogar.</p>
+            <p style="opacity: 0.6; font-size: 0.9rem; margin-top: 1rem;">&copy; 2026 FerreMix App. Todos los derechos
+                reservados.</p>
+        </div>
     </footer>
 
-    {% block scripts %}
     <script src="{{ url_for('static', filename='script.js') }}"></script>
-    {% endblock %}
 </body>
+
 </html>
