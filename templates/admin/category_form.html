@@ -1,24 +1,47 @@
-{% extends "base.html" %}
+{% extends "base.html" %} {% block content %}
+<section class="admin-page">
+  <div class="admin-header">
+    <div>
+      <h2>{{ action }} categoría</h2>
+      <p class="admin-subtitle">
+        Define el nombre y el slug visible en la tienda.
+      </p>
+    </div>
+  </div>
 
-{% block content %}
-<div class="form-container">
-    <h2>{{ action }} Categoría</h2>
+  <div class="admin-card admin-form">
+    <form method="POST" class="admin-form-grid">
+      <div class="form-group">
+        <label class="form-label">Nombre</label>
+        <input
+          type="text"
+          name="name"
+          class="form-control"
+          value="{{ category.name if category else '' }}"
+          required
+        />
+      </div>
 
-    <form method="POST">
-        <div class="form-group">
-            <label class="form-label">Nombre</label>
-            <input type="text" name="name" class="form-control" value="{{ category.name if category else '' }}"
-                required>
-        </div>
+      <div class="form-group">
+        <label class="form-label">Slug (URL)</label>
+        <input
+          type="text"
+          name="slug"
+          class="form-control"
+          value="{{ category.slug if category else '' }}"
+          required
+        />
+      </div>
 
-        <div class="form-group">
-            <label class="form-label">Slug (URL)</label>
-            <input type="text" name="slug" class="form-control" value="{{ category.slug if category else '' }}"
-                required>
-        </div>
-
+      <div class="admin-form-actions">
         <button type="submit" class="btn btn-primary">{{ action }}</button>
-        <a href="{{ url_for('admin.categories_list') }}" class="btn btn-secondary">Cancelar</a>
+        <a
+          href="{{ url_for('admin.categories_list') }}"
+          class="btn btn-secondary"
+          >Cancelar</a
+        >
+      </div>
     </form>
-</div>
+  </div>
+</section>
 {% endblock %}

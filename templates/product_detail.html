@@ -1,42 +1,81 @@
-{% extends "base.html" %}
+{% extends "base.html" %} {% block content %}
+<div
+  class="d-flex"
+  style="gap: 3rem; background: var(--white); padding: 2rem; border-radius: 8px"
+>
+  <div style="flex: 1">
+    <img
+      src="{{ product.image_url or 'https://placehold.co/600x400' }}"
+      alt="{{ product.name }}"
+      style="width: 100%; border-radius: 8px"
+    />
+  </div>
 
-{% block content %}
-<div class="d-flex" style="gap: 3rem; background: var(--white); padding: 2rem; border-radius: 8px;">
-    <div style="flex: 1;">
-        <img src="{{ product.image_url or 'https://placehold.co/600x400' }}" alt="{{ product.name }}"
-            style="width: 100%; border-radius: 8px;">
+  <div style="flex: 1">
+    <div
+      style="
+        color: var(--light-text);
+        text-transform: uppercase;
+        margin-bottom: 0.5rem;
+      "
+    >
+      {{ product.category.name if product.category else 'General' }}
+    </div>
+    <h1 style="margin-bottom: 1rem">{{ product.name }}</h1>
+
+    <div
+      style="
+        font-size: 2rem;
+        color: var(--primary-color);
+        font-weight: bold;
+        margin-bottom: 1.5rem;
+      "
+    >
+      ${{ product.price }}
     </div>
 
-    <div style="flex: 1;">
-        <div style="color: var(--light-text); text-transform: uppercase; margin-bottom: 0.5rem;">
-            {{ product.category.name if product.category else 'General' }}
-        </div>
-        <h1 style="margin-bottom: 1rem;">{{ product.name }}</h1>
+    <p style="margin-bottom: 2rem; font-size: 1.1rem">
+      {{ product.description }}
+    </p>
 
-        <div style="font-size: 2rem; color: var(--primary-color); font-weight: bold; margin-bottom: 1.5rem;">
-            ${{ product.price }}
-        </div>
-
-        <p style="margin-bottom: 2rem; font-size: 1.1rem;">
-            {{ product.description }}
-        </p>
-
-        <div style="margin-bottom: 2rem;">
-            <strong>Disponibilidad:</strong>
-            {% if product.stock > 0 %}
-            <span class="text-success">{{ product.stock }} unidades</span>
-            {% else %}
-            <span class="text-danger">Agotado</span>
-            {% endif %}
-        </div>
-
-        <form action="{{ url_for('cart.add_to_cart', product_id=product.id) }}" method="POST" class="d-flex gap-2">
-            <input type="number" name="quantity" value="1" min="1" max="{{ product.stock }}" class="form-control"
-                style="width: 80px;">
-            <button type="submit" class="btn btn-primary" {% if product.stock==0 %}disabled{% endif %}>
-                Agregar al Carrito
-            </button>
-        </form>
+    <div style="margin-bottom: 2rem">
+      <strong>Disponibilidad:</strong>
+      {% if product.stock > 0 %}
+      <span class="text-success">{{ product.stock }} unidades</span>
+      {% else %}
+      <span class="text-danger">Agotado</span>
+      {% endif %}
     </div>
+
+    <form
+      action="{{ url_for('cart.add_to_cart', product_id=product.id) }}"
+      method="POST"
+      class="d-flex gap-2"
+      data-ajax-add
+    >
+      <input
+        type="number"
+        name="quantity"
+        value="1"
+        min="1"
+        max="{{ product.stock }}"
+        class="form-control"
+        style="width: 80px"
+      />
+      <button
+        type="submit"
+        class="btn btn-primary"
+        {%
+        if
+        product.stock=""
+        ="0"
+        %}disabled{%
+        endif
+        %}
+      >
+        Agregar al Carrito
+      </button>
+    </form>
+  </div>
 </div>
 {% endblock %}
