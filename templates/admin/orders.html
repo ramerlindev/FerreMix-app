@@ -1,35 +1,52 @@
-{% extends "base.html" %}
+{% extends "base.html" %} {% block content %}
+<section class="admin-page">
+  <div class="admin-header">
+    <div>
+      <h2>Órdenes</h2>
+      <p class="admin-subtitle">Gestiona pedidos y actualiza estados.</p>
+    </div>
+  </div>
 
-{% block content %}
-<h2>Todas las Órdenes</h2>
-
-<div class="table-responsive">
+  <div class="admin-card admin-table">
     <table class="table">
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Usuario</th>
-                <th>Total</th>
-                <th>Estado</th>
-                <th>Fecha</th>
-                <th>Acciones</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for order in orders %}
-            <tr>
-                <td>#{{ order.id }}</td>
-                <td>{{ order.user.email if order.user else 'Eliminado' }}</td>
-                <td>${{ order.total_amount }}</td>
-                <td>{{ order.status }}</td>
-                <td>{{ order.created_at.strftime('%Y-%m-%d %H:%M') }}</td>
-                <td>
-                    <a href="{{ url_for('admin.order_detail', order_id=order.id) }}"
-                        class="btn btn-primary btn-sm">Gestionar</a>
-                </td>
-            </tr>
-            {% endfor %}
-        </tbody>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Usuario</th>
+          <th>Total</th>
+          <th>Estado</th>
+          <th>Fecha</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for order in orders %}
+        <tr>
+          <td>#{{ order.id }}</td>
+          <td>{{ order.user.email if order.user else 'Eliminado' }}</td>
+          <td>RD$ {{ order.total_amount }}</td>
+          <td>
+            <span
+              class="order-status-badge {{ 'status-success' if order.status == 'completed' else 'status-warning' }}"
+            >
+              {{ order.status }}
+            </span>
+          </td>
+          <td>
+            {{ order.created_at[:16]|replace('T', ' ') if order.created_at else
+            '' }}
+          </td>
+          <td>
+            <a
+              href="{{ url_for('admin.order_detail', order_id=order.id) }}"
+              class="btn btn-primary btn-sm"
+              >Gestionar</a
+            >
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
     </table>
-</div>
+  </div>
+</section>
 {% endblock %}
