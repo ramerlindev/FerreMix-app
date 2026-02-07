@@ -5,9 +5,9 @@ load_dotenv()
 
 class Config:
     SECRET_KEY = os.environ.get('SECRET_KEY') or 'dev-key-please-change'
-    # Use standard PostgreSQL driver if not specified, but Supabase provides postgresql://
-    SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL')
-    if SQLALCHEMY_DATABASE_URI and SQLALCHEMY_DATABASE_URI.startswith("postgres://"):
-        SQLALCHEMY_DATABASE_URI = SQLALCHEMY_DATABASE_URI.replace("postgres://", "postgresql://", 1)
-        
-    SQLALCHEMY_TRACK_MODIFICATIONS = False
+    
+    # Supabase API Configuration
+    SUPABASE_URL = os.environ.get('SUPABASE_URL')
+    SUPABASE_KEY = os.environ.get('SUPABASE_KEY') or os.environ.get('ANNON_KEY')
+    
+    # No SQLALCHEMY definitions needed anymore

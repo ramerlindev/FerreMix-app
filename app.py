@@ -1,25 +1,20 @@
 import os
 from flask import Flask
 from config import Config
-from extensions import db, login_manager
-from models import User
+from extensions import login_manager
+from models import User, Product
 
 def create_app(config_class=Config):
     app = Flask(__name__)
     app.config.from_object(config_class)
 
     # Initialize extensions
-    db.init_app(app)
     login_manager.init_app(app)
 
     # User loader callback for Flask-Login
     @login_manager.user_loader
     def load_user(user_id):
-        try:
-            return User.query.get(user_id)
-        except Exception as e:
-            print(f"Error loading user: {e}")
-            return None
+        return User.get(user_id)
 
     # Register Blueprints
     from routes.main import main_bp
@@ -34,16 +29,8 @@ def create_app(config_class=Config):
     app.register_blueprint(cart_bp, url_prefix='/cart')
     app.register_blueprint(orders_bp, url_prefix='/orders')
 
-    # Shell context for flask shell
-    @app.shell_context_processor
-    def make_shell_context():
-        return {'db': db, 'User': User, 'Product': Product}
-
     return app
 
 if __name__ == '__main__':
     app = create_app()
-    with app.app_context():
-        db.create_all() # Crea tablas si no existen (útil para SQLite local)
-        print("Base de datos inicializada correctamente.")
     app.run(debug=True)
