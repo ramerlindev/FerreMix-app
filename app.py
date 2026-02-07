@@ -15,7 +15,11 @@ def create_app(config_class=Config):
     # User loader callback for Flask-Login
     @login_manager.user_loader
     def load_user(user_id):
-        return User.query.get(user_id)
+        try:
+            return User.query.get(user_id)
+        except Exception as e:
+            print(f"Error loading user: {e}")
+            return None
 
     # Register Blueprints
     from routes.main import main_bp
@@ -39,4 +43,7 @@ def create_app(config_class=Config):
 
 if __name__ == '__main__':
     app = create_app()
+    with app.app_context():
+        db.create_all() # Crea tablas si no existen (útil para SQLite local)
+        print("Base de datos inicializada correctamente.")
     app.run(debug=True)

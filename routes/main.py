@@ -5,10 +5,13 @@ main_bp = Blueprint('main', __name__)
 
 @main_bp.route('/')
 def index():
-    categories = Category.query.all()
-    # Pagination simple or limit could be added here
-    products = Product.query.limit(20).all()
-    return render_template('index.html', products=products, categories=categories, title="Inicio")
+    try:
+        categories = Category.query.all()
+        # Pagination simple or limit could be added here
+        products = Product.query.limit(20).all()
+        return render_template('index.html', products=products, categories=categories, title="Inicio")
+    except Exception as e:
+        return f"<h1>Error de Base de Datos</h1><p>{str(e)}</p>", 500
 
 @main_bp.route('/offers')
 def offers():
