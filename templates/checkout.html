@@ -1,49 +1,163 @@
-{% extends "base.html" %}
-
-{% block content %}
-<div class="form-container" style="max-width: 800px;">
-    <h2 class="text-center">Finalizar Compra</h2>
-
-    <div class="alert alert-warning">
-        <i class="fas fa-info-circle"></i> Esta es una simulación. No se realizará ningún cobro real.
+{% extends "base.html" %} {% block content %}
+<section class="checkout-page">
+  <div class="checkout-header">
+    <div>
+      <h2>Finalizar compra</h2>
+      <p class="checkout-subtitle">
+        Completa tus datos y confirma el pago simulado.
+      </p>
     </div>
+    <span class="checkout-badge"
+      ><i class="fas fa-shield-alt"></i> Compra segura</span
+    >
+  </div>
 
-    <div class="d-flex justify-between" style="gap: 2rem;">
-        <div style="flex: 1;">
-            <h3>Resumen del Pedido</h3>
-            <ul style="list-style: none; padding: 0;">
-                {% for item in cart.items %}
-                <li class="d-flex justify-between" style="border-bottom: 1px solid #eee; padding: 0.5rem 0;">
-                    <span>{{ item.quantity }}x {{ item.product.name }}</span>
-                    <span>${{ item.product.price * item.quantity }}</span>
-                </li>
-                {% endfor %}
-                <li class="d-flex justify-between" style="padding: 1rem 0; font-weight: bold; font-size: 1.2rem;">
-                    <span>Total</span>
-                    <span>${{ total }}</span>
-                </li>
-            </ul>
+  <div class="alert alert-warning checkout-alert">
+    <i class="fas fa-info-circle"></i> Esta es una simulación. No se realizará
+    ningún cobro real.
+  </div>
+
+  <div class="checkout-grid">
+    <aside class="checkout-summary">
+      <h3>Resumen del pedido</h3>
+      <ul class="checkout-items">
+        {% for item in cart['items'] %}
+        <li class="checkout-item">
+          <div>
+            <span>{{ item.quantity }}x {{ item['product'].name }}</span>
+            <small>RD$ {{ item['product'].price }}</small>
+          </div>
+          <strong>RD$ {{ item['product'].price * item.quantity }}</strong>
+        </li>
+        {% endfor %}
+      </ul>
+      <div class="checkout-total">
+        <span>Total</span>
+        <strong>RD$ {{ total }}</strong>
+      </div>
+      <div class="checkout-note">
+        <i class="fas fa-truck"></i>
+        Envío calculado al confirmar.
+      </div>
+    </aside>
+
+    <div class="checkout-form-card">
+      <form
+        action="{{ url_for('cart.checkout') }}"
+        method="POST"
+        class="checkout-form"
+      >
+        <div class="checkout-section">
+          <h3>Datos de envío</h3>
+          <div class="checkout-fields">
+            <div class="form-group">
+              <label class="form-label">Nombre completo</label>
+              <input
+                type="text"
+                name="full_name"
+                class="form-control"
+                placeholder="Juan Pérez"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Teléfono</label>
+              <input
+                type="tel"
+                name="phone"
+                class="form-control"
+                placeholder="809-555-5555"
+                required
+              />
+            </div>
+            <div class="form-group checkout-span">
+              <label class="form-label">Dirección</label>
+              <input
+                type="text"
+                name="address"
+                class="form-control"
+                placeholder="Calle Falsa 123"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Ciudad</label>
+              <input
+                type="text"
+                name="city"
+                class="form-control"
+                placeholder="Santo Domingo"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Notas</label>
+              <input
+                type="text"
+                name="notes"
+                class="form-control"
+                placeholder="Apartamento 3B"
+              />
+            </div>
+          </div>
         </div>
 
-        <div style="flex: 1; border-left: 1px solid #eee; padding-left: 2rem;">
-            <h3>Datos de Envío (Simulado)</h3>
-            <form action="{{ url_for('cart.checkout') }}" method="POST">
-                <div class="form-group">
-                    <label class="form-label">Dirección</label>
-                    <input type="text" class="form-control" placeholder="Calle Falsa 123" required>
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Ciudad</label>
-                    <input type="text" class="form-control" placeholder="Santo Domingo" required>
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Teléfono</label>
-                    <input type="tel" class="form-control" placeholder="809-555-5555" required>
-                </div>
-
-                <button type="submit" class="btn btn-success btn-lg" style="width: 100%;">Confirmar Pago</button>
-            </form>
+        <div class="checkout-section">
+          <h3>Pago</h3>
+          <div class="payment-options">
+            <label class="payment-card">
+              <input
+                type="radio"
+                name="payment_method"
+                value="tarjeta"
+                required
+              />
+              <div>
+                <strong>Tarjeta</strong>
+                <span>Visa, Mastercard, Amex</span>
+              </div>
+            </label>
+            <label class="payment-card">
+              <input
+                type="radio"
+                name="payment_method"
+                value="transferencia"
+                required
+              />
+              <div>
+                <strong>Transferencia</strong>
+                <span>Confirmación en minutos</span>
+              </div>
+            </label>
+            <label class="payment-card">
+              <input
+                type="radio"
+                name="payment_method"
+                value="efectivo"
+                required
+              />
+              <div>
+                <strong>Efectivo</strong>
+                <span>Paga al recibir</span>
+              </div>
+            </label>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Referencia (opcional)</label>
+            <input
+              type="text"
+              name="transaction_ref"
+              class="form-control"
+              placeholder="REF-12345"
+            />
+          </div>
         </div>
+
+        <button type="submit" class="btn btn-success btn-lg checkout-btn">
+          Confirmar pago
+        </button>
+      </form>
     </div>
-</div>
+  </div>
+</section>
 {% endblock %}
