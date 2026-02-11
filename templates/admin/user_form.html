@@ -1,11 +1,17 @@
 {% extends "base.html" %} {% block content %}
 <section class="admin-page">
   <div class="admin-header">
-    <div>
-      <h2>Crear usuario</h2>
-      <p class="admin-subtitle">
-        Agrega accesos con rol administrador si es necesario.
-      </p>
+    <div class="admin-header-info">
+      <a href="{{ url_for('admin.users_list') }}" class="admin-back">
+        <i class="fas fa-arrow-left"></i> Volver a usuarios
+      </a>
+      <div>
+        <h2>{{ 'Editar usuario' if user else 'Crear usuario' }}</h2>
+        <p class="admin-subtitle">
+          {{ 'Actualiza los datos del usuario.' if user else 'Agrega accesos con
+          rol administrador si es necesario.' }}
+        </p>
+      </div>
     </div>
   </div>
 
@@ -13,23 +19,55 @@
     <form method="POST" class="admin-form-grid">
       <div class="form-group">
         <label class="form-label">Email</label>
-        <input type="email" name="email" class="form-control" required />
+        <input
+          type="email"
+          name="email"
+          class="form-control"
+          value="{{ user.email if user else '' }}"
+          required
+        />
       </div>
 
       <div class="form-group">
         <label class="form-label">Contraseña</label>
-        <input type="password" name="password" class="form-control" required />
+        <input
+          type="password"
+          name="password"
+          class="form-control"
+          {%
+          if
+          user
+          %}placeholder="Deja en blanco para mantener"
+          {%
+          else
+          %}required{%
+          endif
+          %}
+        />
       </div>
 
       <div class="form-group">
         <label class="form-label">
-          <input type="checkbox" name="is_admin" />
+          <input
+            type="checkbox"
+            name="is_admin"
+            {%
+            if
+            user
+            and
+            user.is_admin
+            %}checked{%
+            endif
+            %}
+          />
           ¿Es Administrador?
         </label>
       </div>
 
       <div class="admin-form-actions">
-        <button type="submit" class="btn btn-primary">Crear</button>
+        <button type="submit" class="btn btn-primary">
+          {{ 'Guardar cambios' if user else 'Crear' }}
+        </button>
         <a href="{{ url_for('admin.users_list') }}" class="btn btn-secondary"
           >Cancelar</a
         >

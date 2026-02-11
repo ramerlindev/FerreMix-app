@@ -1,9 +1,14 @@
 {% extends "base.html" %} {% block content %}
 <section class="admin-page">
   <div class="admin-header">
-    <div>
-      <h2>{{ action }} producto</h2>
-      <p class="admin-subtitle">Completa la información para el catálogo.</p>
+    <div class="admin-header-info">
+      <a href="{{ url_for('admin.products_list') }}" class="admin-back">
+        <i class="fas fa-arrow-left"></i> Volver a productos
+      </a>
+      <div>
+        <h2>{{ action }} producto</h2>
+        <p class="admin-subtitle">Completa la información para el catálogo.</p>
+      </div>
     </div>
   </div>
 

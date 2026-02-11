@@ -1,9 +1,16 @@
 {% extends "base.html" %} {% block content %}
 <section class="admin-page">
   <div class="admin-header">
-    <div>
-      <h2>Gestión de productos</h2>
-      <p class="admin-subtitle">Actualiza precios, stock y ofertas activas.</p>
+    <div class="admin-header-info">
+      <a href="{{ url_for('admin.dashboard') }}" class="admin-back">
+        <i class="fas fa-arrow-left"></i> Volver al panel
+      </a>
+      <div>
+        <h2>Gestión de productos</h2>
+        <p class="admin-subtitle">
+          Actualiza precios, stock y ofertas activas.
+        </p>
+      </div>
     </div>
     <a href="{{ url_for('admin.create_product') }}" class="btn btn-success">
       <i class="fas fa-plus"></i> Nuevo producto
@@ -38,22 +45,25 @@
             <span class="badge badge-secondary">No</span>
             {% endif %}
           </td>
-          <td class="d-flex gap-2">
-            <a
-              href="{{ url_for('admin.edit_product', id=product.id) }}"
-              class="btn btn-secondary btn-sm"
-            >
-              <i class="fas fa-edit"></i>
-            </a>
-            <form
-              action="{{ url_for('admin.delete_product', id=product.id) }}"
-              method="POST"
-              onsubmit="return confirm('¿Estás seguro?');"
-            >
-              <button type="submit" class="btn btn-danger btn-sm">
-                <i class="fas fa-trash"></i>
-              </button>
-            </form>
+          <td>
+            <div class="admin-table-actions">
+              <a
+                href="{{ url_for('admin.edit_product', id=product.id) }}"
+                class="btn btn-secondary btn-sm"
+              >
+                <i class="fas fa-edit"></i>
+              </a>
+              <form
+                action="{{ url_for('admin.delete_product', id=product.id) }}"
+                method="POST"
+                class="inline-form"
+                data-confirm="¿Eliminar este producto?"
+              >
+                <button type="submit" class="btn btn-danger btn-sm">
+                  <i class="fas fa-trash"></i>
+                </button>
+              </form>
+            </div>
           </td>
         </tr>
         {% endfor %}
