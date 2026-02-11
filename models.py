@@ -48,6 +48,31 @@ class User(UserMixin):
         return None
 
     @staticmethod
+    def get_all():
+        try:
+            response = (
+                supabase.table("users")
+                .select("*")
+                .order("created_at", desc=True)
+                .execute()
+            )
+            users = []
+            for data in response.data or []:
+                users.append(
+                    User(
+                        id=data.get("id"),
+                        email=data.get("email"),
+                        password_hash=data.get("password_hash"),
+                        is_admin=data.get("is_admin", False),
+                        created_at=data.get("created_at"),
+                    )
+                )
+            return users
+        except Exception as e:
+            print(f"Error getting users: {e}")
+        return []
+
+    @staticmethod
     def create(email, password, is_admin=False):
         password_hash = generate_password_hash(password)
         user_id = str(uuid.uuid4())
@@ -65,6 +90,22 @@ class User(UserMixin):
         except Exception as e:
             print(f"Error creating user: {e}")
         return None
+
+    @staticmethod
+    def update(user_id, data):
+        try:
+            response = supabase.table("users").update(data).eq("id", user_id).execute()
+            return response.data[0] if response.data else None
+        except Exception as e:
+            print(f"Error updating user: {e}")
+        return None
+
+    @staticmethod
+    def delete(user_id):
+        try:
+            supabase.table("users").delete().eq("id", user_id).execute()
+        except Exception as e:
+            print(f"Error deleting user: {e}")
 
     def check_password(self, password):
         return check_password_hash(self.password_hash, password)

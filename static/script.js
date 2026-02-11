@@ -139,4 +139,45 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
     }
+
+    const confirmModal = document.getElementById('confirmModal');
+    const confirmMessage = document.getElementById('confirmModalMessage');
+    const confirmAccept = document.getElementById('confirmModalAccept');
+    const confirmCloseItems = document.querySelectorAll('[data-modal-close]');
+    let pendingForm = null;
+
+    const openConfirmModal = message => {
+        if (!confirmModal) return;
+        confirmMessage.textContent = message || '¿Seguro que deseas continuar?';
+        confirmModal.classList.add('active');
+        confirmModal.setAttribute('aria-hidden', 'false');
+    };
+
+    const closeConfirmModal = () => {
+        if (!confirmModal) return;
+        confirmModal.classList.remove('active');
+        confirmModal.setAttribute('aria-hidden', 'true');
+        pendingForm = null;
+    };
+
+    if (confirmModal && confirmAccept) {
+        document.querySelectorAll('form[data-confirm]').forEach(form => {
+            form.addEventListener('submit', event => {
+                event.preventDefault();
+                pendingForm = form;
+                openConfirmModal(form.dataset.confirm);
+            });
+        });
+
+        confirmCloseItems.forEach(item => {
+            item.addEventListener('click', closeConfirmModal);
+        });
+
+        confirmAccept.addEventListener('click', () => {
+            if (pendingForm) {
+                pendingForm.submit();
+            }
+            closeConfirmModal();
+        });
+    }
 });
