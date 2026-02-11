@@ -1,11 +1,16 @@
 {% extends "base.html" %} {% block content %}
 <section class="admin-page">
   <div class="admin-header">
-    <div>
-      <h2>{{ action }} categoría</h2>
-      <p class="admin-subtitle">
-        Define el nombre y el slug visible en la tienda.
-      </p>
+    <div class="admin-header-info">
+      <a href="{{ url_for('admin.categories_list') }}" class="admin-back">
+        <i class="fas fa-arrow-left"></i> Volver a categorías
+      </a>
+      <div>
+        <h2>{{ action }} categoría</h2>
+        <p class="admin-subtitle">
+          Define el nombre y el slug visible en la tienda.
+        </p>
+      </div>
     </div>
   </div>
 

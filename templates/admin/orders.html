@@ -1,9 +1,14 @@
 {% extends "base.html" %} {% block content %}
 <section class="admin-page">
   <div class="admin-header">
-    <div>
-      <h2>Órdenes</h2>
-      <p class="admin-subtitle">Gestiona pedidos y actualiza estados.</p>
+    <div class="admin-header-info">
+      <a href="{{ url_for('admin.dashboard') }}" class="admin-back">
+        <i class="fas fa-arrow-left"></i> Volver al panel
+      </a>
+      <div>
+        <h2>Órdenes</h2>
+        <p class="admin-subtitle">Gestiona pedidos y actualiza estados.</p>
+      </div>
     </div>
   </div>
 
