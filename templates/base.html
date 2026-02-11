@@ -187,5 +187,32 @@
     </footer>
 
     <script src="{{ url_for('static', filename='script.js') }}"></script>
+    <div class="modal" id="confirmModal" aria-hidden="true">
+      <div class="modal-overlay" data-modal-close></div>
+      <div
+        class="modal-content"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="confirmModalTitle"
+      >
+        <div class="modal-header">
+          <h3 id="confirmModalTitle">Confirmar acción</h3>
+          <button type="button" class="modal-close" data-modal-close>
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+        <p class="modal-message" id="confirmModalMessage">
+          ¿Seguro que deseas continuar?
+        </p>
+        <div class="modal-actions">
+          <button type="button" class="btn btn-secondary" data-modal-close>
+            Cancelar
+          </button>
+          <button type="button" class="btn btn-danger" id="confirmModalAccept">
+            Sí, continuar
+          </button>
+        </div>
+      </div>
+    </div>
   </body>
 </html>

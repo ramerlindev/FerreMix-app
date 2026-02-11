@@ -1,11 +1,16 @@
 {% extends "base.html" %} {% block content %}
 <section class="admin-page">
   <div class="admin-header">
-    <div>
-      <h2>Gestión de categorías</h2>
-      <p class="admin-subtitle">
-        Administra los grupos visibles en el catálogo.
-      </p>
+    <div class="admin-header-info">
+      <a href="{{ url_for('admin.dashboard') }}" class="admin-back">
+        <i class="fas fa-arrow-left"></i> Volver al panel
+      </a>
+      <div>
+        <h2>Gestión de categorías</h2>
+        <p class="admin-subtitle">
+          Administra los grupos visibles en el catálogo.
+        </p>
+      </div>
     </div>
     <a href="{{ url_for('admin.create_category') }}" class="btn btn-success">
       <i class="fas fa-plus"></i> Nueva categoría
@@ -28,26 +33,25 @@
           <td>{{ category.id }}</td>
           <td>{{ category.name }}</td>
           <td>{{ category.slug }}</td>
-          <td class="d-flex gap-2">
-            <a
-              href="{{ url_for('admin.edit_category', id=category.id) }}"
-              class="btn btn-secondary btn-sm"
-            >
-              <i class="fas fa-edit"></i>
-            </a>
-            <form
-              action="{{ url_for('admin.delete_category', id=category.id) }}"
-              method="POST"
-              onsubmit="
-                return confirm(
-                  '¿Seguro? Esto podría afectar productos asociados.',
-                );
-              "
-            >
-              <button type="submit" class="btn btn-danger btn-sm">
-                <i class="fas fa-trash"></i>
-              </button>
-            </form>
+          <td>
+            <div class="admin-table-actions">
+              <a
+                href="{{ url_for('admin.edit_category', id=category.id) }}"
+                class="btn btn-secondary btn-sm"
+              >
+                <i class="fas fa-edit"></i>
+              </a>
+              <form
+                action="{{ url_for('admin.delete_category', id=category.id) }}"
+                method="POST"
+                class="inline-form"
+                data-confirm="¿Seguro? Esto podría afectar productos asociados."
+              >
+                <button type="submit" class="btn btn-danger btn-sm">
+                  <i class="fas fa-trash"></i>
+                </button>
+              </form>
+            </div>
           </td>
         </tr>
         {% endfor %}
