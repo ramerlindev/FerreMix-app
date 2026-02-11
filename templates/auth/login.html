@@ -1,24 +1,74 @@
-{% extends "base.html" %}
-
-{% block content %}
-<div class="form-container">
-    <h2 class="text-center">Iniciar Sesión</h2>
-    <form action="{{ url_for('auth.login') }}" method="POST">
+{% extends "base.html" %} {% block content %}
+<div class="auth-page">
+  <div class="auth-card">
+    <div class="auth-visual">
+      <div class="auth-visual-content">
+        <span class="auth-badge"
+          ><i class="fas fa-shield-alt"></i> Acceso seguro</span
+        >
+        <h2>Bienvenido a FerreMix</h2>
+        <p>
+          Gestiona tus compras y pedidos con una experiencia rápida y segura.
+        </p>
+        <ul class="auth-points">
+          <li>
+            <i class="fas fa-check-circle"></i> Historial de pedidos en un clic
+          </li>
+          <li><i class="fas fa-check-circle"></i> Ofertas personalizadas</li>
+          <li><i class="fas fa-check-circle"></i> Checkout más rápido</li>
+        </ul>
+      </div>
+    </div>
+    <div class="auth-form">
+      <div class="auth-header">
+        <h2>Iniciar sesión</h2>
+        <p>Ingresa con tu correo y contraseña para continuar.</p>
+      </div>
+      <form
+        action="{{ url_for('auth.login') }}"
+        method="POST"
+        class="auth-form-body"
+      >
         <div class="form-group">
-            <label class="form-label">Correo Electrónico</label>
-            <input type="email" name="email" class="form-control" required>
+          <label class="form-label">Correo electrónico</label>
+          <div class="input-group">
+            <span class="input-icon"><i class="fas fa-envelope"></i></span>
+            <input
+              type="email"
+              name="email"
+              class="form-control"
+              placeholder="tu@correo.com"
+              required
+            />
+          </div>
         </div>
 
         <div class="form-group">
-            <label class="form-label">Contraseña</label>
-            <input type="password" name="password" class="form-control" required>
+          <label class="form-label">Contraseña</label>
+          <div class="input-group">
+            <span class="input-icon"><i class="fas fa-lock"></i></span>
+            <input
+              type="password"
+              name="password"
+              class="form-control"
+              placeholder="••••••••"
+              required
+            />
+          </div>
         </div>
 
-        <button type="submit" class="btn btn-primary" style="width: 100%;">Ingresar</button>
-    </form>
+        <button type="submit" class="btn btn-primary btn-block">
+          Ingresar
+        </button>
+      </form>
 
-    <p class="text-center mt-4">
-        ¿No tienes cuenta? <a href="{{ url_for('auth.register') }}">Regístrate aquí</a>
-    </p>
+      <p class="auth-footer">
+        ¿No tienes cuenta?
+        <a class="auth-link" href="{{ url_for('auth.register') }}"
+          >Regístrate aquí</a
+        >
+      </p>
+    </div>
+  </div>
 </div>
 {% endblock %}
